@@ -22,7 +22,7 @@ type ReducerAction = {
     type: ReducerActionTypeEnum.SetActiveIndex;
     payload: number;
 };
-
+console.log('1');
 function init(extensions: Extension[]) {
     const rightStatusItems = extensions.reduce((items: Function[], ext) => {
         const item = ext.statusbarRightComponent();
