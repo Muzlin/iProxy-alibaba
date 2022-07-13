@@ -108,6 +108,7 @@ export class WechatProxy extends Extension {
             setProjectList(newProjectList);
             saveProjects(newProjectList);
             generateInitRule(true);
+            setRuleList(readRules());
           },
         });
       };
@@ -115,6 +116,7 @@ export class WechatProxy extends Extension {
         saveProjects(e);
         setProjectList(e);
         generateInitRule(true);
+        setRuleList(readRules());
       };
       return (
         <div className="iproxy-wechat">
@@ -126,6 +128,32 @@ export class WechatProxy extends Extension {
               btnText="新增服务"
               btnType="primary"
             ></EditDrawer>
+          </div>
+          <div className="iproxy-wechat-container">
+            <Card title="vConsole 注入" style={{ width: 380 }}>
+              <p className="util">注入环境</p>
+              <Row>
+                {Object.keys(envRuleOption).map((env) => {
+                  return (
+                    <Col span={6} key={env}>
+                      <Checkbox value={`util-${env}`}>{env}</Checkbox>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Card>
+            <Card title="CORS 跨域头注入" style={{ width: 380 }}>
+              <p className="util">注入环境</p>
+              <Row>
+                {Object.keys(envRuleOption).map((env) => {
+                  return (
+                    <Col span={6} key={env}>
+                      <Checkbox value={`util-${env}`}>{env}</Checkbox>
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Card>
           </div>
           <Checkbox.Group value={checkedList} className="iproxy-wechat-container" onChange={onChange}>
             {projectList.map((project: any) => {
@@ -177,29 +205,6 @@ export class WechatProxy extends Extension {
                         </Col>
                       );
                     })}
-                  </Row>
-                  <p className="util">工具</p>
-                  <Row>
-                    <Col className="item" span={12}>
-                      <span className="name">vConsole</span>
-                      <Switch
-                        checkedChildren="已注入"
-                        unCheckedChildren="未注入"
-                        defaultChecked={false}
-                        disabled
-                        size="small"
-                      />
-                    </Col>
-                    <Col className="item" span={12}>
-                      <span className="name">CORS跨域头</span>
-                      <Switch
-                        checkedChildren="已注入"
-                        unCheckedChildren="未注入"
-                        defaultChecked={false}
-                        disabled
-                        size="small"
-                      />
-                    </Col>
                   </Row>
                 </Card>
               );
