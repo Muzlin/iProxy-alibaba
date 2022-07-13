@@ -72,6 +72,23 @@ function generateInitRule(init = false) {
     return;
   }
   const rules: any = [];
+  const style = `\`
+  <div style="
+  width: 61px;
+  height: 22px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  border-radius: 12px;
+  font-size: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  color: #52c41a;
+  font-weight: bold;
+  z-index: 9999;
+  ">iProxy</div>
+  \``;
   projects.forEach((project: any) => {
     // 每个环境单独生成规则
     Object.keys(envRuleOption).forEach((env) => {
@@ -81,6 +98,8 @@ function generateInitRule(init = false) {
         enabled: proxyEnv.includes(`${project.name}-${env}`),
         uuid: `wechat-proxy-${project.name}-${env}`,
         content: `
+                # 添加代理成功标识
+                ${envRuleOption[env].domain} htmlPrepend://${style}
                 # 企微授权接口流量走对应环境
                 ^${envRuleOption[env].domain}/wxwork/v1/*** ${envRuleOption[env].domain}/wxwork/v1/$1
                 # 将入口html文件代理至本地服务
