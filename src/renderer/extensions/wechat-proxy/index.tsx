@@ -118,13 +118,15 @@ export class WechatProxy extends Extension {
       };
       return (
         <div className="iproxy-wechat">
-          <EditDrawer
-            onSuccess={editSuccess}
-            type="add"
-            icon={<PlusOutlined />}
-            btnText="新增服务"
-            btnType="primary"
-          ></EditDrawer>
+          <div className="top-bar">
+            <EditDrawer
+              onSuccess={editSuccess}
+              type="add"
+              icon={<PlusOutlined />}
+              btnText="新增服务"
+              btnType="primary"
+            ></EditDrawer>
+          </div>
           <Checkbox.Group value={checkedList} className="iproxy-wechat-container" onChange={onChange}>
             {projectList.map((project: any) => {
               return (

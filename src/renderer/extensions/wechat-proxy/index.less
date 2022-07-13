@@ -1,11 +1,21 @@
 .iproxy-wechat {
-    overflow: auto;
+    overflow: hidden;
     height: 100%;
     margin: 45px 20px;
-    padding-bottom: 60px;
+    height: 100%;
+    .top-bar {
+        margin-bottom: 8px;
+    }
     &-container{
         display: flex !important;
         flex-wrap: wrap !important;
+        max-height: 100% !important;
+        overflow: auto !important;
+        padding-bottom: 64px !important;
+
+        .ant-card{
+            margin: 0 2px 2px 0 !important;
+        }
         p {
             margin-bottom: 4px;
         }
