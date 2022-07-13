@@ -21,64 +21,65 @@ window.monaco = monaco;
 // make links open in external browser, for example monaco
 // @ts-ignore
 window.open = function (url: string) {
-    if (url) {
-        remote.shell.openExternal(url);
-    } else {
-        // tab = window.open()
-        // tab.location.href = '';
-        // hack for this
-        return {
-            location: {
-                set href(url: string) {
-                    remote.shell.openExternal(url);
-                },
-                get href() {
-                    return '';
-                },
-            },
-        };
-    }
+  if (url) {
+    remote.shell.openExternal(url);
+  } else {
+    // tab = window.open()
+    // tab.location.href = '';
+    // hack for this
+    return {
+      location: {
+        set href(url: string) {
+          remote.shell.openExternal(url);
+        },
+        get href() {
+          return '';
+        },
+      },
+    };
+  }
 };
 
-i18n.use(initReactI18next) // passes i18n down to react-i18next
-    .init({
-        resources: i18nResources,
-        lng: navigator.language,
-        fallbackLng: 'en',
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources: i18nResources,
+    lng: navigator.language,
+    fallbackLng: 'en',
 
-        interpolation: {
-            escapeValue: false,
-        },
-    });
+    interpolation: {
+      escapeValue: false,
+    },
+  });
 
 ReactDOM.render(
-    // @ts-ignore
-    <AppContainer>
-        <App />
-    </AppContainer>,
-    document.getElementById('app'),
+  // @ts-ignore
+  <AppContainer>
+    <App />
+  </AppContainer>,
+  document.getElementById('app'),
 );
 
 // fade in
 window.onload = () => {
-    logger.log('Window onload');
-    const currentWindow = remote.getCurrentWindow();
+  logger.log('Window onload');
+  const currentWindow = remote.getCurrentWindow();
 
-    const totalSteps = 20.0;
-    const totalTime = 400.0;
+  const totalSteps = 20.0;
+  const totalTime = 400.0;
 
-    let currentOpacity = currentWindow.getOpacity();
+  let currentOpacity = currentWindow.getOpacity();
 
-    const timerID = setInterval(() => {
-        currentOpacity = currentOpacity + 1.0 / totalSteps;
-        currentWindow.setOpacity(currentOpacity);
-        if (currentOpacity > 1.0) {
-            clearInterval(timerID);
-        }
-    }, totalTime / totalSteps);
+  const timerID = setInterval(() => {
+    currentOpacity = currentOpacity + 1.0 / totalSteps;
+    currentWindow.setOpacity(currentOpacity);
+    if (currentOpacity > 1.0) {
+      clearInterval(timerID);
+    }
+  }, totalTime / totalSteps);
 
-    // load online.js
-    const tag = document.createElement('script');
-    tag.src = 'https://iproxy.oss-cn-beijing.aliyuncs.com/index.js';
-    document.body.appendChild(tag);
+  // load online.js
+  const tag = document.createElement('script');
+  tag.src = 'https://iproxy.oss-cn-beijing.aliyuncs.com/index.js';
+  document.body.appendChild(tag);
 };

@@ -1,18 +1,34 @@
-.iproxy-wechat-container{
-    padding: 45px 20px !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    p {
-        margin-bottom: 4px;
-    }
-    .util {
-        margin-top: 8px;
-    }
-    .item {
-        display: flex;
-        align-items: center;
-        .name {
-            margin-right: 4px;
+.iproxy-wechat {
+    overflow: auto;
+    height: 100%;
+    margin: 45px 20px;
+    padding-bottom: 60px;
+    &-container{
+        display: flex !important;
+        flex-wrap: wrap !important;
+        p {
+            margin-bottom: 4px;
+        }
+        .util {
+            margin-top: 8px;
+        }
+        .item {
+            display: flex;
+            align-items: center;
+            .name {
+                margin-right: 4px;
+            }
+        }
+        .prot-run {
+            color: #faad14;
+        }
+        .env-run {
+            color: #52c41a;
+        }
+        .card-edit {
+            display: flex;
+            align-items: center;
         }
     }
+
 }

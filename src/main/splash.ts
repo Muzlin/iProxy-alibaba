@@ -1,12 +1,12 @@
 // from https://github.com/bkniffler/electron-splashscreen/blob/master/src/templates/office.ts
 export const splash = ({
-    logo = 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Microsoft_Office_2013_logo.svg',
-    brand = 'Brand',
-    productName = 'Product',
-    text = 'Loading ...',
-    website = 'www.website.com',
-    color = '#666',
-    fontColor = 'white',
+  logo = 'https://upload.wikimedia.org/wikipedia/commons/d/dd/Microsoft_Office_2013_logo.svg',
+  brand = 'Brand',
+  productName = 'Product',
+  text = 'Loading ...',
+  website = 'www.website.com',
+  color = '#666',
+  fontColor = 'white',
 }) => `
   <!DOCTYPE html>
   <meta charset="utf-8">

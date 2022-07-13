@@ -3,35 +3,35 @@ import { CoreAPI } from './core-api';
 import logger from 'electron-log';
 
 export class Extension {
-    private mId: string;
-    public coreAPI = CoreAPI;
+  private mId: string;
+  public coreAPI = CoreAPI;
 
-    constructor(id: string) {
-        this.mId = id;
-        logger.info('Init extension', this.mId);
-    }
+  constructor(id: string) {
+    this.mId = id;
+    logger.info('Init extension', this.mId);
+  }
 
-    statusbarRightComponent(): Function | null {
-        return null;
-    }
+  statusbarRightComponent(): Function | null {
+    return null;
+  }
 
-    panelComponent(): Function | null {
-        return null;
-    }
+  panelComponent(): Function | null {
+    return null;
+  }
 
-    panelIcon(): string {
-        return 'experiment';
-    }
+  panelIcon(): string {
+    return 'experiment';
+  }
 
-    panelTitle(): string {
-        return 'unkown';
-    }
+  panelTitle(): string {
+    return 'unkown';
+  }
 
-    keepAlive() {
-        return false;
-    }
+  keepAlive() {
+    return false;
+  }
 
-    name() {
-        return this.constructor.name;
-    }
+  name() {
+    return this.constructor.name;
+  }
 }
