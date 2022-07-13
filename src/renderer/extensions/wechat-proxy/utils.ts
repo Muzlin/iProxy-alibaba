@@ -35,21 +35,28 @@ const readRules = () => {
 // 初始化所有环境的代理规则
 function generateInitRule(init = false) {
   /**
-         * 推入规则
-         *   name: project.name + 环境
-            enabled: false,
-              uuid: `wechat-proxy-${project.name + 环境}`,
-              content: p.rule
-        # 企微授权接口流量走对应环境
-        ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/wxwork/v1/*** https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/wxwork/v1/$1
-        # 将入口html文件代理至本地服务
-        # eg. https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-crm/
-        # eg. https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-workbench/
-        # eg. https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-mk/
-        ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/*** http://localhost:3011/$1
-        ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-crm/***  http://localhost:3011/mobile-crm/$1
-        `
-      */
+    * 推入规则
+    * name: project.name + 环境
+      enabled: false,
+      uuid: `wechat-proxy-${project.name + 环境}`,
+      content: p.rule
+    # 企微授权接口流量走对应环境
+    ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/wxwork/v1/*** https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/wxwork/v1/$1
+    # 将入口html文件代理至本地服务
+    # eg. https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-crm/
+    # eg. https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-workbench/
+    # eg. https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-mk/
+    ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/*** http://localhost:3011/$1
+    ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-crm/***  http://localhost:3011/mobile-crm/$1
+    `
+  */
+  /**
+   * 注入 vConsole
+   * github.com/xcodebuild/iproxy htmlPrepend://`
+      <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+      <script>eruda.init();</script>
+    }`
+   */
   // 获取项目列表（没有则读取预设的项目,并写入）
   let projects: any = readProjects();
   if (!projects?.length) {

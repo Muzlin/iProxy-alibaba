@@ -67,6 +67,16 @@ const EditDrawer = (props: any) => {
     form.setFieldsValue({ name, port, entry });
   }, []);
 
+  const checkData = (rule: any, value: any, callback: any) => {
+    if (value) {
+      if (!/^[0-9a-zA-Z\-]+$/.test(value)) {
+        callback(new Error('只能输入数字、字母、中划线，禁止输入空格'));
+      } else {
+        callback();
+      }
+    }
+  };
+
   return (
     <>
       <Button size="small" type={props.btnType || 'text'} onClick={showDrawer} icon={props.icon}>
@@ -93,9 +103,10 @@ const EditDrawer = (props: any) => {
                     required: true,
                     message: '请输入本地服务名称，一般为项目名称',
                   },
+                  { validator: checkData },
                 ]}
               >
-                <Input placeholder="请输入本地服务名称" />
+                <Input allowClear placeholder="请输入本地服务名称" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -107,9 +118,10 @@ const EditDrawer = (props: any) => {
                     required: true,
                     message: '请输入本地服务的运行端口',
                   },
+                  { validator: checkData },
                 ]}
               >
-                <Input type="number" placeholder="请输入本地服务的运行端口" />
+                <Input allowClear placeholder="请输入本地服务的运行端口" />
               </Form.Item>
             </Col>
           </Row>
@@ -123,9 +135,10 @@ const EditDrawer = (props: any) => {
                     required: true,
                     message: '请输入本地项目的PublicPath(资源基础路径)',
                   },
+                  { validator: checkData },
                 ]}
               >
-                <Input placeholder="请输入本地项目的PublicPath" />
+                <Input allowClear placeholder="请输入本地项目的PublicPath" />
               </Form.Item>
             </Col>
           </Row>
