@@ -390,7 +390,7 @@ export class WhistleExtension extends Extension {
             <RetweetOutlined></RetweetOutlined>
             {t('Restart proxy')}
           </Menu.Item>
-          {getHelperMenus(t)}
+          {/* {getHelperMenus(t)} */}
           <Menu.Item onClick={this.showUserNamePassword.bind(this)}>
             <KeyOutlined />
             {t('Whistle password')}
@@ -438,6 +438,7 @@ export class WhistleExtension extends Extension {
       }, []);
       return (
         <>
+          <div>Power By Whistle</div>
           <div className="switch-whistle-proxy-on-lan">
             <span>{t('Proxy on LAN')}:&nbsp;</span>
             <Switch

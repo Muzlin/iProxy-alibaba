@@ -244,9 +244,9 @@ function createMainWindow() {
   }
 
   // @ts-ignore
-  global.WHISTLE_USERNAME = nanoid(8);
+  global.WHISTLE_USERNAME = 'dustess-2022';
   // @ts-ignore
-  global.WHISTLE_PASSWORD = nanoid(8);
+  global.WHISTLE_PASSWORD = 'cfx-6666';
 
   window.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
     // @ts-ignore
