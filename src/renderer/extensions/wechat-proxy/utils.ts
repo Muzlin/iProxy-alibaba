@@ -105,7 +105,7 @@ function generateInitRule(init = false) {
         uuid: `wechat-proxy-${project.name}-${env}`,
         content: `
                 # 添加代理成功标识
-                ${envRuleOption[env].domain} htmlPrepend://${style}
+                ${envRuleOption[env].domain}/${entryRule} htmlPrepend://${style}
                 # 企微授权接口流量走对应环境
                 ^${envRuleOption[env].domain}/wxwork/v1/*** ${envRuleOption[env].domain}/wxwork/v1/$1
                 # 将入口html文件代理至本地服务

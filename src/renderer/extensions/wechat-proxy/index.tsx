@@ -45,7 +45,7 @@ export class WechatProxy extends Extension {
       const [ruleList, setRuleList] = useState<any>(() => readRules());
       const [projectList, setProjectList] = useState<any>(() => readProjects());
       const [checkedList, setCheckedList] = useState<any>(() => readEnableEnv());
-      const [checkedUtilList, setCheckedUtilList] = useState<any>([]);
+      const [checkedUtilList, setCheckedUtilList] = useState<any>(() => readUtil());
 
       // 检测本地服务是否启动&启动的环境信息
       const checkLocalServerEnv = (port: number, entry: string): any => {
