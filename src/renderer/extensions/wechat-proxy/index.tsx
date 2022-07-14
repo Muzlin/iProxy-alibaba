@@ -84,7 +84,7 @@ export class WechatProxy extends Extension {
           return i;
         });
         const resolved = await Promise.all(unresolved);
-        setProjectList(resolved.sort((a, b) => b.isRun - a.isRun));
+        setProjectList(resolved?.sort((a: any, b: any) => (b?.isRun || false) - (a?.isRun || false)));
       };
 
       useInterval(() => {
