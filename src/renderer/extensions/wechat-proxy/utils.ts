@@ -6,6 +6,16 @@ const RULE_STORE_KEY = 'wechat-proxy-rules';
 const PROJECT_STORE_KEY = 'wechat-proxy-projects';
 // 已开启代理的环境key
 const ENABLE_ENV_STORE_KEY = 'wechat-proxy-enable-env';
+// 工具注入key
+const UTIL_STORE_KEY = 'wechat-proxy-util';
+
+const saveUtil = (util: any) => {
+  CoreAPI.store.set(UTIL_STORE_KEY, util);
+};
+
+const readUtil = () => {
+  return CoreAPI.store.get(UTIL_STORE_KEY);
+};
 
 const saveEnableEnv = (env: any) => {
   CoreAPI.store.set(ENABLE_ENV_STORE_KEY, env);
@@ -50,13 +60,6 @@ function generateInitRule(init = false) {
     ^https://wwe794a77fed527d53-qw-scrm-test2.dustess.com/mobile-crm/***  http://localhost:3011/mobile-crm/$1
     `
   */
-  /**
-   * 注入 vConsole
-   * github.com/xcodebuild/iproxy htmlPrepend://`
-      <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-      <script>eruda.init();</script>
-    }`
-   */
   // 获取项目列表（没有则读取预设的项目,并写入）
   let projects: any = readProjects();
   if (!projects?.length) {
@@ -66,6 +69,9 @@ function generateInitRule(init = false) {
 
   // 获取已开启代理的环境key
   const proxyEnv = readEnableEnv() || [];
+
+  // 获取已开启工具注入的环境key
+  const utilKey = readUtil() || [];
 
   const savedRules = readRules();
   if (savedRules?.length > 0 && !init) {
@@ -108,8 +114,48 @@ function generateInitRule(init = false) {
       });
     });
   });
+  // 生成工具注入规则
+  /**
+   * 注入 vConsole
+   * github.com/xcodebuild/iproxy htmlPrepend://`
+      <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+      <script>eruda.init();</script>
+    }`
+   */
+  const utilStr = `\`
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
+  \``;
+  Object.keys(envRuleOption).forEach((env) => {
+    rules.push({
+      name: `util-console-${env}`,
+      enabled: utilKey.includes(`util-console-${env}`),
+      uuid: `wechat-proxy-util-console-${env}`,
+      content: `
+      ${envRuleOption[env].domain} htmlPrepend://${utilStr}
+      `,
+    });
+    rules.push({
+      name: `util-cors-${env}`,
+      enabled: utilKey.includes(`util-cors-${env}`),
+      uuid: `wechat-proxy-util-cors-${env}`,
+      content: `
+      ${envRuleOption[env].domain} htmlPrepend://${utilStr}
+      `,
+    });
+  });
   saveRules(rules);
   console.log('init rules', rules);
 }
 
-export { generateInitRule, readRules, saveRules, saveProjects, readProjects, saveEnableEnv, readEnableEnv };
+export {
+  generateInitRule,
+  readRules,
+  saveRules,
+  saveProjects,
+  readProjects,
+  saveEnableEnv,
+  readEnableEnv,
+  saveUtil,
+  readUtil,
+};

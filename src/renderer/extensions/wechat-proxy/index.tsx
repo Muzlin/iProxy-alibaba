@@ -4,7 +4,17 @@ import { Extension } from '../../extension';
 import { message, Checkbox, Card, Row, Col, Switch, Tooltip, Modal } from 'antd';
 import './index.less';
 import { envRuleOption } from './const';
-import { generateInitRule, readProjects, readRules, saveEnableEnv, saveProjects, saveRules } from './utils';
+import {
+  generateInitRule,
+  readEnableEnv,
+  readProjects,
+  readRules,
+  readUtil,
+  saveEnableEnv,
+  saveProjects,
+  saveRules,
+  saveUtil,
+} from './utils';
 import http from 'http';
 import {
   QuestionCircleOutlined,
@@ -34,7 +44,8 @@ export class WechatProxy extends Extension {
       generateInitRule();
       const [ruleList, setRuleList] = useState<any>(() => readRules());
       const [projectList, setProjectList] = useState<any>(() => readProjects());
-      const [checkedList, setCheckedList] = useState<any>([]);
+      const [checkedList, setCheckedList] = useState<any>(() => readEnableEnv());
+      const [checkedUtilList, setCheckedUtilList] = useState<any>([]);
 
       // 检测本地服务是否启动&启动的环境信息
       const checkLocalServerEnv = (port: number, entry: string): any => {
@@ -73,29 +84,37 @@ export class WechatProxy extends Extension {
           return i;
         });
         const resolved = await Promise.all(unresolved);
-        setProjectList(resolved);
+        setProjectList(resolved.sort((a, b) => b.isRun - a.isRun));
       };
 
       useInterval(() => {
         checkLocalServer();
       }, 5000);
 
-      // 获取开启的代理环境key
-      useEffect(() => {
-        setCheckedList(ruleList.filter((item: any) => item.enabled).map((item: any) => item.name));
-      }, []);
-      // 开启、关闭某个环境的代理
-      const onChange = (e: any) => {
+      const changeRules = () => {
+        const ruleKey = readEnableEnv();
+        const utilKey = readUtil();
         saveRules(
           ruleList.map((item: any) => {
-            item.enabled = e.includes(item.name);
+            item.enabled = [...ruleKey, ...utilKey].includes(item.name);
             return item;
           }),
         );
         setRuleList(ruleList);
+      };
+      // 开启、关闭某个环境的代理
+      const onChange = (e: any) => {
         saveEnableEnv(e);
         setCheckedList(e);
+        changeRules();
       };
+      const onUtilChange = (e: any) => {
+        console.log('onUtilChange', e);
+        setCheckedUtilList(e);
+        saveUtil(e);
+        changeRules();
+      };
+
       const delProject = (project: any) => {
         Modal.confirm({
           title: `是否删除 ${project.name} 项目?`,
@@ -118,6 +137,7 @@ export class WechatProxy extends Extension {
         generateInitRule(true);
         setRuleList(readRules());
       };
+
       return (
         <div className="iproxy-wechat">
           <div className="top-bar">
@@ -129,14 +149,14 @@ export class WechatProxy extends Extension {
               btnType="primary"
             ></EditDrawer>
           </div>
-          <div className="iproxy-wechat-container">
+          <Checkbox.Group className="iproxy-wechat-container" value={checkedUtilList} onChange={onUtilChange}>
             <Card title="vConsole 注入" style={{ width: 380 }}>
               <p className="util">注入环境</p>
               <Row>
                 {Object.keys(envRuleOption).map((env) => {
                   return (
                     <Col span={6} key={env}>
-                      <Checkbox value={`util-${env}`}>{env}</Checkbox>
+                      <Checkbox value={`util-console-${env}`}>{env}</Checkbox>
                     </Col>
                   );
                 })}
@@ -148,13 +168,13 @@ export class WechatProxy extends Extension {
                 {Object.keys(envRuleOption).map((env) => {
                   return (
                     <Col span={6} key={env}>
-                      <Checkbox value={`util-${env}`}>{env}</Checkbox>
+                      <Checkbox value={`util-cors-${env}`}>{env}</Checkbox>
                     </Col>
                   );
                 })}
               </Row>
             </Card>
-          </div>
+          </Checkbox.Group>
           <Checkbox.Group value={checkedList} className="iproxy-wechat-container" onChange={onChange}>
             {projectList.map((project: any) => {
               return (
