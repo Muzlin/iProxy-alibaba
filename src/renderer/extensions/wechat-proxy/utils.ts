@@ -43,7 +43,7 @@ const readRules = () => {
 };
 
 // 初始化所有环境的代理规则
-function generateInitRule(init = false) {
+function generateInitRule() {
   /**
     * 推入规则
     * name: project.name + 环境
@@ -74,9 +74,9 @@ function generateInitRule(init = false) {
   const utilKey = readUtil() || [];
 
   const savedRules = readRules();
-  if (savedRules?.length > 0 && !init) {
-    return;
-  }
+  // if (savedRules?.length > 0 && !init) {
+  //   return;
+  // }
   const rules: any = [];
   const style = `\`
   <div style="

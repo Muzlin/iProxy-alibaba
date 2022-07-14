@@ -126,7 +126,7 @@ export class WechatProxy extends Extension {
             const newProjectList = projectList.filter((item: any) => item.name !== project.name);
             setProjectList(newProjectList);
             saveProjects(newProjectList);
-            generateInitRule(true);
+            generateInitRule();
             setRuleList(readRules());
           },
         });
@@ -134,7 +134,7 @@ export class WechatProxy extends Extension {
       const editSuccess = (e: any) => {
         saveProjects(e);
         setProjectList(e);
-        generateInitRule(true);
+        generateInitRule();
         setRuleList(readRules());
       };
 
