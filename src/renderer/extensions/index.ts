@@ -11,16 +11,16 @@ import { Weinre } from './weinre';
 import { WechatProxy } from './wechat-proxy';
 
 export function getAllExtensions() {
-    const extensions = [
-        new WechatProxy(),
-        new RuleEditor(),
-        // new Network(),
-        new WhistlePanel(),
-        // new Weinre(),
-        new PhoneProxy(),
-        new Setting(),
-        new WhistleExtension(),
-    ] as unknown as Extension[];
+  const extensions = [
+    new WechatProxy(),
+    // new RuleEditor(),
+    // new Network(),
+    new WhistlePanel(),
+    // new Weinre(),
+    new PhoneProxy(),
+    new Setting(),
+    new WhistleExtension(),
+  ] as unknown as Extension[];
 
-    return extensions;
+  return extensions;
 }

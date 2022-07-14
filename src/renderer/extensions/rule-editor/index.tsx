@@ -16,119 +16,119 @@ let trayContextMenu;
 let t: TFunction;
 
 async function buildTrayContextMenu() {
-    const rules: Rule[] = CoreAPI.store.get(RULE_STORE_KEY) || [];
-    const ruleListMenus = rules.map((item, index) => {
-        return {
-            type: 'checkbox' as 'checkbox',
-            label: item.name,
-            checked: item.enabled,
-            async click() {
-                CoreAPI.eventEmmitter.emit('iproxy-toggle-rule', index);
-                // await ipc.callRenderer(mainWindow, 'toggle-rule', item.id);
-            },
-        };
-    });
+  const rules: Rule[] = CoreAPI.store.get(RULE_STORE_KEY) || [];
+  const ruleListMenus = rules.map((item, index) => {
+    return {
+      type: 'checkbox' as 'checkbox',
+      label: item.name,
+      checked: item.enabled,
+      async click() {
+        CoreAPI.eventEmmitter.emit('iproxy-toggle-rule', index);
+        // await ipc.callRenderer(mainWindow, 'toggle-rule', item.id);
+      },
+    };
+  });
 
-    const online = CoreAPI.store.get('onlineStatus') === 'online' ? true : false;
+  const online = CoreAPI.store.get('onlineStatus') === 'online' ? true : false;
 
-    trayContextMenu = remote.Menu.buildFromTemplate([
-        {
-            type: 'checkbox',
-            label: t('System Proxy'),
-            checked: online,
-            async click() {
-                CoreAPI.eventEmmitter.emit('iproxy-toggle-system-proxy');
-            },
-        },
-        { type: 'separator' },
-        ...ruleListMenus,
-        { type: 'separator' },
-        {
-            label: t('Document'),
-            click() {
-                remote.shell.openExternal(DOCUMENT_URL);
-            },
-        },
-        {
-            label: t('Copy Proxy Shell Export Line'),
-            async click() {
-                const port = await getWhistlePort(CoreAPI);
+  trayContextMenu = remote.Menu.buildFromTemplate([
+    {
+      type: 'checkbox',
+      label: t('System Proxy'),
+      checked: online,
+      async click() {
+        CoreAPI.eventEmmitter.emit('iproxy-toggle-system-proxy');
+      },
+    },
+    { type: 'separator' },
+    ...ruleListMenus,
+    { type: 'separator' },
+    {
+      label: t('Document'),
+      click() {
+        remote.shell.openExternal(DOCUMENT_URL);
+      },
+    },
+    {
+      label: t('Copy Proxy Shell Export Line'),
+      async click() {
+        const port = await getWhistlePort(CoreAPI);
 
-                remote.clipboard.writeText(
-                    `export https_proxy=${generateHTTPProxyUrl(port)}
+        remote.clipboard.writeText(
+          `export https_proxy=${generateHTTPProxyUrl(port)}
 http_proxy=${generateHTTPProxyUrl(port)}
 all_proxy=${generateSocksProxyUrl(port)}
 `
-                        .split('\n')
-                        .join(' '),
-                );
+            .split('\n')
+            .join(' '),
+        );
 
-                new Notification('Proxy shell export copied', {
-                    body: t('Proxy shell export copied'),
-                });
-            },
-        },
-        {
-            label: t('Homepage'),
-            click() {
-                remote.shell.openExternal(GITHUB_PROJECT_PAGE);
-            },
-        },
-        {
-            label: t('Show Window'),
-            click() {
-                remote.getCurrentWindow().show();
-            },
-        },
-        {
-            label: t('Exit App'),
-            click() {
-                remote.app.quit();
-            },
-        },
-    ]);
-    tray.setContextMenu(trayContextMenu);
+        new Notification('Proxy shell export copied', {
+          body: t('Proxy shell export copied'),
+        });
+      },
+    },
+    {
+      label: t('Homepage'),
+      click() {
+        remote.shell.openExternal(GITHUB_PROJECT_PAGE);
+      },
+    },
+    {
+      label: t('Show Window'),
+      click() {
+        remote.getCurrentWindow().show();
+      },
+    },
+    {
+      label: t('Exit App'),
+      click() {
+        remote.app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(trayContextMenu);
 }
 
 export class RuleEditor extends Extension {
-    constructor() {
-        super('rule-editor');
+  constructor() {
+    super('rule-editor');
 
-        (async () => {
-            const image = remote.nativeImage.createFromPath(ICON_TEMPLATE_PATH);
-            tray = await new remote.Tray(image);
+    (async () => {
+      const image = remote.nativeImage.createFromPath(ICON_TEMPLATE_PATH);
+      tray = await new remote.Tray(image);
 
-            tray.on('mouse-move', buildTrayContextMenu);
-            tray.on('click', buildTrayContextMenu);
-            tray.setToolTip('iProxy');
-        })();
-    }
+      tray.on('mouse-move', buildTrayContextMenu);
+      tray.on('click', buildTrayContextMenu);
+      tray.setToolTip('iProxy');
+    })();
+  }
 
-    panelComponent() {
-        const saveRules = (rules: Rule[]) => {
-            this.coreAPI.store.set(RULE_STORE_KEY, rules);
-            this.coreAPI.eventEmmitter.emit('whistle-save-rule', rules);
-        };
+  panelComponent() {
+    const saveRules = (rules: Rule[]) => {
+      this.coreAPI.store.set(RULE_STORE_KEY, rules);
+      this.coreAPI.eventEmmitter.emit('whistle-save-rule', rules);
+    };
 
-        const readRules = () => {
-            return this.coreAPI.store.get(RULE_STORE_KEY);
-        };
+    const readRules = () => {
+      return this.coreAPI.store.get(RULE_STORE_KEY);
+    };
 
-        return function RuleEditorPanelComponent() {
-            t = useTranslation().t;
-            return <RuleList saveRules={saveRules} readRules={readRules} />;
-        };
-    }
+    return function RuleEditorPanelComponent() {
+      t = useTranslation().t;
+      return <RuleList saveRules={saveRules} readRules={readRules} />;
+    };
+  }
 
-    panelIcon() {
-        return 'unordered-list';
-    }
+  panelIcon() {
+    return 'unordered-list';
+  }
 
-    panelTitle() {
-        return 'Rule';
-    }
+  panelTitle() {
+    return 'Rule';
+  }
 
-    keepAlive(): boolean {
-        return true;
-    }
+  keepAlive(): boolean {
+    return true;
+  }
 }
