@@ -22,7 +22,7 @@ import {
   PROXY_CONF_HELPER_PATH,
   PROXY_CONF_HELPER_FILE_PATH,
 } from './const';
-import { clipboard, dialog } from 'electron';
+import { clipboard, dialog, app } from 'electron';
 import treeKill from 'tree-kill';
 
 import logger from 'electron-log';
@@ -101,19 +101,17 @@ async function generateCert() {
   });
 }
 
-function alertAndQuit() {
+function alertAndQuit(title?: string, message?: string) {
   dialog.showErrorBox(
-    'Grant Authorization Failed 授权失败',
-    `Grant Authorization Failed for install certificate and helper
-macOS user Please input your user password when dialog
-Windows user Please try to enable Property => Compatibility => Run program as Administrator
-安装证书或者 helper 过程中授权失败
-macOS 用户请尝试在弹出的对话框中输入用户密码
-Windows 用户请尝试打开在 属性 => 兼容性 => 以管理员身份运营该应用
-Deepin GNU/Linux 用户请安装libnss3-tools然后重启本软件
+    title || '授权失败',
+    message ||
+      `
+      安装证书或者 helper 过程中授权失败
+      macOS 用户请尝试在弹出的对话框中输入用户密码
+      Windows 用户请尝试打开在 属性 => 兼容性 => 以管理员身份运营该应用
+      Deepin GNU/Linux 用户请安装libnss3-tools然后重启本软件
 
-Application will quit
-应用程序即将退出
+      应用程序即将退出
     `,
   );
   treeKill(process.pid);
@@ -136,35 +134,59 @@ export async function installCertAndHelper() {
   const formatPath = (path: string) => '"' + path + '"';
 
   const INSTALL_DONE_FILE = '/tmp/iproxy-install-done';
-  // 信任证书 & 安装 helper
+  // 信任证书 & 安装 helper1
   const installPromise = new Promise((resolve, reject) => {
     if (SYSTEM_IS_MACOS) {
-      // macOS big sur do not allow trust cert in any auto way
-      // show box to guide user run command
-      const showGuide = () => {
-        const cmd = `echo "Please input local login password 请输入本地登录密码" && sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
-          dir,
-          CERT_FILE_NAME,
-        )}" && sudo cp ${formatPath(PROXY_CONF_HELPER_FILE_PATH)} ${formatPath(
-          PROXY_CONF_HELPER_PATH,
-        )} && sudo chown root:admin ${formatPath(PROXY_CONF_HELPER_PATH)} && sudo chmod a+rx+s ${formatPath(
-          PROXY_CONF_HELPER_PATH,
-        )} && touch ${INSTALL_DONE_FILE} && echo "安装完成"
-                `;
-        clipboard.writeText(cmd);
+      const cmd = `echo "请输入本地登录密码" && sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
+        dir,
+        CERT_FILE_NAME,
+      )}" && sudo cp ${formatPath(PROXY_CONF_HELPER_FILE_PATH)} ${formatPath(
+        PROXY_CONF_HELPER_PATH,
+      )} && sudo chown root:admin ${formatPath(PROXY_CONF_HELPER_PATH)} && sudo chmod a+rx+s ${formatPath(
+        PROXY_CONF_HELPER_PATH,
+      )} && touch ${INSTALL_DONE_FILE} && echo "安装完成"`;
 
-        dialog.showMessageBoxSync({
+      const showGuide = (openTerminal = true) => {
+        // 复制命令到剪贴板
+        clipboard.writeText(cmd);
+        if (openTerminal) {
+          try {
+            // 打开终端命令
+            const autoCmd = `echo '${cmd}' > install-helper.sh`;
+            // 输出命令到脚本
+            execSync(autoCmd);
+            // 给脚本增加运行权限
+            execSync('chmod +x install-helper.sh');
+            // 打开终端运行
+            execSync('open -a Terminal install-helper.sh');
+          } catch (error) {}
+        }
+
+        const integer = dialog.showMessageBoxSync({
           type: 'info',
-          message: `Paste command to your Terminal and run to install cert and helper
-                    （命令已复制到剪贴板）粘贴命令到终端并运行以安装并信任证书
-                    `,
+          textWidth: 360,
+          defaultId: 1,
+          buttons: ['太麻烦了，不用了', '我已经安装了'],
+          message: `如果你的终端自动打开，请按步骤完成证书安装。
+
+                    如果你的终端没有打开，请各位老六自己打开。
+
+                    命令已经复制到了剪贴板，粘贴命令到终端并运行以安装并信任证书
+                   `,
         });
+        if (integer === 0) {
+          console.log('User cancel');
+          reject('customer');
+          return;
+        } else {
+          if (!fs.existsSync(INSTALL_DONE_FILE)) {
+            showGuide(false);
+          } else {
+            resolve(true);
+          }
+        }
       };
       showGuide();
-      while (!fs.existsSync(INSTALL_DONE_FILE)) {
-        showGuide();
-      }
-      resolve(true);
     } else if (SYSTEM_IS_LINUX) {
       // only tested in deepin
       if (!shell.which('certutil')) {
@@ -190,9 +212,7 @@ export async function installCertAndHelper() {
     } else {
       dialog.showMessageBoxSync({
         type: 'info',
-        message: `The certificate and proxy helper is not installed or has expired. You need to install. You may need to enter the password of the login user.
-        未安装证书/代理helper或者已经过期，需要安装，可能会需要输入登录用户的密码。
-                `,
+        message: `未安装证书/代理helper或者已经过期，需要安装，可能会需要输入登录用户的密码。`,
       });
       fs.copyFileSync(PROXY_CONF_HELPER_FILE_PATH, PROXY_CONF_HELPER_PATH);
       const command = `certutil -enterprise -f -v -AddStore "Root" "${path.join(
@@ -221,7 +241,13 @@ export async function installCertAndHelper() {
     await installPromise;
   } catch (e) {
     console.error(e);
-    alertAndQuit();
+    let title;
+    let message;
+    if (e === 'customer') {
+      title = 'FBI WARNING';
+      message = 'BP 是个老六 😁';
+    }
+    alertAndQuit(title, message);
     // prevent copy cert after failed
     return;
   }

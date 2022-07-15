@@ -136,10 +136,9 @@ async function initSplashScreen() {
       'data:text/html;charset=UTF-8,' +
       encodeURIComponent(
         splash({
-          brand: 'Build with ♥',
+          brand: 'Power By Whistle',
           productName: `iProxy`,
           text: `Loading - ${version} ...`,
-          website: 'https://github.com/xcodebuild/iproxy',
           logo: logoIcon,
           color: '#1890ff',
         }),
@@ -223,9 +222,10 @@ function createMainWindow() {
   mainWindowState.manage(window);
   require('@electron/remote/main').enable(window.webContents);
 
-  if (isDevelopment) {
-    window.webContents.openDevTools();
-  }
+  // if (isDevelopment) {
+  //   window.webContents.openDevTools();
+  // }
+  window.webContents.openDevTools();
 
   const filter = {
     urls: ['*://127.0.0.1:*/*'],

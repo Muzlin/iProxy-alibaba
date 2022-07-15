@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useState } from 'react';
 // @ts-ignore
 import { Extension } from '../../extension';
-import { message, Checkbox, Card, Row, Col, Switch, Tooltip, Modal } from 'antd';
+import { Checkbox, Card, Row, Col, Switch, Tooltip, Modal } from 'antd';
 import './index.less';
 import { envRuleOption } from './const';
 import {
@@ -25,10 +25,55 @@ import {
 } from '@ant-design/icons';
 import EditDrawer from './edit';
 import { useInterval } from 'ahooks';
+import { Tray } from 'electron';
+import * as remote from '@electron/remote';
+import { CoreAPI } from '../../core-api';
+import { ICON_TEMPLATE_PATH } from '../../const';
+
+let tray: Tray;
+let trayContextMenu;
+
+async function buildTrayContextMenu() {
+  const online = CoreAPI.store.get('onlineStatus') === 'online' ? true : false;
+
+  trayContextMenu = remote.Menu.buildFromTemplate([
+    {
+      type: 'checkbox',
+      label: '系统代理',
+      checked: online,
+      async click() {
+        CoreAPI.eventEmmitter.emit('iproxy-toggle-system-proxy');
+      },
+    },
+    { type: 'separator' },
+    { type: 'separator' },
+    {
+      label: '显示窗口',
+      click() {
+        remote.getCurrentWindow().show();
+      },
+    },
+    {
+      label: '退出应用',
+      click() {
+        remote.app.quit();
+      },
+    },
+  ]);
+  tray.setContextMenu(trayContextMenu);
+}
 
 export class WechatProxy extends Extension {
   constructor() {
     super('wechat-proxy');
+    (async () => {
+      const image = remote.nativeImage.createFromPath(ICON_TEMPLATE_PATH);
+      tray = await new remote.Tray(image);
+
+      tray.on('mouse-move', buildTrayContextMenu);
+      tray.on('click', buildTrayContextMenu);
+      tray.setToolTip('iProxy');
+    })();
   }
 
   panelIcon() {
@@ -102,7 +147,7 @@ export class WechatProxy extends Extension {
         );
         setRuleList(ruleList);
       };
-      // 开启、关闭某个环境的代理
+      // 开启、关闭某个环境的代理1
       const onChange = (e: any) => {
         saveEnableEnv(e);
         setCheckedList(e);
