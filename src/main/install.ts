@@ -151,15 +151,20 @@ export async function installCertAndHelper() {
         clipboard.writeText(cmd);
         if (openTerminal) {
           try {
+            logger.info('打开终端');
+            const pathStr = path.join(dir, 'install-helper.sh');
+            logger.info('pathStr', pathStr);
             // 打开终端命令
-            const autoCmd = `echo '${cmd}' > install-helper.sh`;
+            const autoCmd = `echo '${cmd}' > ${pathStr}`;
             // 输出命令到脚本
             execSync(autoCmd);
             // 给脚本增加运行权限
-            execSync('chmod +x install-helper.sh');
+            execSync(`chmod 777 ${pathStr}`);
             // 打开终端运行
-            execSync('open -a Terminal install-helper.sh');
-          } catch (error) {}
+            execSync(`open -a Terminal ${pathStr}`);
+          } catch (error) {
+            logger.error('打开终端', error);
+          }
         }
 
         const integer = dialog.showMessageBoxSync({
@@ -179,6 +184,7 @@ export async function installCertAndHelper() {
           reject('customer');
           return;
         } else {
+          logger.info('check file', fs.existsSync(INSTALL_DONE_FILE));
           if (!fs.existsSync(INSTALL_DONE_FILE)) {
             showGuide(false);
           } else {
@@ -289,6 +295,7 @@ async function checkHelperInstall() {
 
 // 检查安装状态，如果没安装就安装一下
 export default async function checkInstallStatus() {
+  logger.info('mac helper path', PROXY_CONF_HELPER_PATH);
   if ((await checkCertInstall()) && (await checkHelperInstall())) {
     // pass
   } else {

@@ -19,18 +19,18 @@ const handleShowLogs = () => {
 
 export function getHelperMenus(t: Function) {
   return [
-    <Menu.Item key="home" onClick={handleHomepage}>
-      <HomeOutlined />
-      {t('Home Page & Document')}
-    </Menu.Item>,
-    <Menu.Item key="issue" onClick={handleIssue}>
-      <BugOutlined />
-      {t('Report issue')}
-    </Menu.Item>,
-    <Menu.Item key="github" onClick={handleGithub}>
-      <GithubOutlined />
-      {t('Github')}
-    </Menu.Item>,
+    // <Menu.Item key="home" onClick={handleHomepage}>
+    //   <HomeOutlined />
+    //   {t('Home Page & Document')}
+    // </Menu.Item>,
+    // <Menu.Item key="issue" onClick={handleIssue}>
+    //   <BugOutlined />
+    //   {t('Report issue')}
+    // </Menu.Item>,1
+    // <Menu.Item key="github" onClick={handleGithub}>
+    //   <GithubOutlined />
+    //   {t('Github')}
+    // </Menu.Item>,
     <Menu.Item key="log" onClick={handleShowLogs}>
       <FileTextOutlined />
       {t('Show logs')}

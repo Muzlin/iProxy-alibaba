@@ -390,7 +390,7 @@ export class WhistleExtension extends Extension {
             <RetweetOutlined></RetweetOutlined>
             {t('Restart proxy')}
           </Menu.Item>
-          {/* {getHelperMenus(t)} */}
+          {getHelperMenus(t)}
           <Menu.Item onClick={this.showUserNamePassword.bind(this)}>
             <KeyOutlined />
             {t('Whistle password')}
