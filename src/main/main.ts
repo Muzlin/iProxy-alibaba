@@ -194,6 +194,7 @@ async function initCopyFiles() {
 }
 
 let forceQuit = false;
+let devToolsEnable = false;
 
 function createMainWindow() {
   const mainWindowState = windowStateKeeper({
@@ -225,7 +226,17 @@ function createMainWindow() {
   // if (isDevelopment) {
   //   window.webContents.openDevTools();
   // }
-  window.webContents.openDevTools();
+  // window.webContents.openDevTools();
+
+  globalShortcut.register('CommandOrControl+J+K', () => {
+    if (devToolsEnable) {
+      window.webContents.closeDevTools();
+      devToolsEnable = false;
+    } else {
+      window.webContents.openDevTools();
+      devToolsEnable = true;
+    }
+  });
 
   const filter = {
     urls: ['*://127.0.0.1:*/*'],

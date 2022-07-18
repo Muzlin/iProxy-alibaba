@@ -202,6 +202,10 @@ export async function initIPC(mainWindow: BrowserWindow) {
 
   ipcMain.answerRenderer('checkDelay', checkDelay);
 
+  ipcMain.answerRenderer('update', (e) => {
+    console.log('togger update', e);
+  });
+
   // start a socketIO server for extension background process
   await BoardcastManager.getInstance();
 

@@ -1,4 +1,10 @@
 /**
+ * TODO: 证书安装失败机器
+ * sudo cp ~/Library/Application\ Support/LightProxy/files/proxy_conf_helper ~/Library/Application\ Support/LightProxy/proxy_conf_helper
+  sudo chmod +s ~/Library/Application\ Support/LightProxy/proxy_conf_helper
+ */
+
+/**
  * 证书安装
  * Helper 安装等
  */

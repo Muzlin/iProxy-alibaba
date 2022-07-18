@@ -102,16 +102,17 @@ class InnerSettingForm extends React.Component {
         isUpdating: true,
       });
       try {
-        const result = await CoreAPI.update();
-        if (!result) {
-          message.success(t('Already latest version'));
-        } else {
-          message.success(t('Update success, app will restart'));
-          setTimeout(() => {
-            remote.app.relaunch();
-            remote.app.quit();
-          }, 800);
-        }
+        message.warning('功能正在开发中');
+        // const result = await CoreAPI.update();
+        // if (!result) {
+        //   message.success(t('Already latest version'));
+        // } else {
+        //   message.success(t('Update success, app will restart'));
+        //   setTimeout(() => {
+        //     remote.app.relaunch();
+        //     remote.app.quit();
+        //   }, 800);
+        // }
       } catch (e) {
         // @ts-ignore
         message.error(e.toString());
@@ -141,7 +142,7 @@ class InnerSettingForm extends React.Component {
           })(<Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />)}
         </Form.Item>
 
-        <Form.Item label={t('Enable hotkey')}>
+        {/* <Form.Item label={t('Enable hotkey')}>
           {getFieldDecorator('enableHotkeys', {
             valuePropName: 'checked',
             initalValue: false,
@@ -149,7 +150,7 @@ class InnerSettingForm extends React.Component {
           <Tooltip title={t('Toggle Proxy') + ' | Cmd/Ctrl+Shift+Alt+P'}>
             <QuestionCircleOutlined style={{ marginLeft: '5px' }}></QuestionCircleOutlined>
           </Tooltip>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item label={t('Disable TLS Check')}>
           {getFieldDecorator('disableTlsCheck', {
@@ -157,17 +158,17 @@ class InnerSettingForm extends React.Component {
             initalValue: true,
           })(<Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />)}
         </Form.Item>
-        <Form.Item label={t('Default Port')}>
+        {/* <Form.Item label={t('Default Port')}>
           {getFieldDecorator('defaultPort')(<InputNumber min={1024} max={65534} />)}
-        </Form.Item>
-        <Form.Item label={t('Copyright')}>
+        </Form.Item> */}
+        {/* <Form.Item label={t('Copyright')}>
           <Typography>Version {version} Made with love</Typography>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label={t('Actions')}>
           <Button className="action-btn" loading={this.state.isUpdating} onClick={checkUpdate} type="primary">
             {t('Check Update')}
           </Button>
-          <Popover
+          {/* <Popover
             content={<img src="https://img.alicdn.com/tfs/TB1mK5Ks5_1gK0jSZFqXXcpaXXa-546-720.png_350x350" />}
             title={t('Use DingTalk scan to discuss')}
             trigger="hover"
@@ -180,11 +181,11 @@ class InnerSettingForm extends React.Component {
             >
               {t('Get Help')}
             </Button>
-          </Popover>
+          </Popover> */}
         </Form.Item>
-        <Form.Item label={t('Plugins')}>
+        {/* <Form.Item label={t('Plugins')}>
           <PluginInfoCard />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     );
   }

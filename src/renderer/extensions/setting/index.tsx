@@ -7,44 +7,44 @@ import { CoreAPI } from '../../core-api';
 const SettingFormComponent = SettingForm as any;
 
 export class Setting extends Extension {
-    constructor() {
-        super('setinng');
-    }
+  constructor() {
+    super('setinng');
+  }
 
-    panelIcon() {
-        return 'setting';
-    }
+  panelIcon() {
+    return 'setting';
+  }
 
-    panelComponent() {
-        const SettingPanelComponent = () => {
-            const { t } = useTranslation();
-            const settings = CoreAPI.store.get('settings') || {};
+  panelComponent() {
+    const SettingPanelComponent = () => {
+      const { t } = useTranslation();
+      const settings = CoreAPI.store.get('settings') || {};
 
-            if (!settings.updateChannel) {
-                settings.updateChannel = 'stable';
-            }
+      if (!settings.updateChannel) {
+        settings.updateChannel = 'stable';
+      }
 
-            if (!(settings.softwareWhiteList === false)) {
-                settings.softwareWhiteList = true;
-            }
+      if (!(settings.softwareWhiteList === false)) {
+        settings.softwareWhiteList = true;
+      }
 
-            if (!settings.defaultPort) {
-                settings.defaultPort = 12888;
-            }
+      if (!settings.defaultPort) {
+        settings.defaultPort = 12888;
+      }
 
-            return (
-                <div className="iproxy-setting no-drag">
-                    {/* <p>iProxy poweredby Whistle & Electron</p>
+      return (
+        <div className="iproxy-setting no-drag">
+          {/* <p>iProxy poweredby Whistle & Electron</p>
                     <p>Made with love by IFE</p>
                     <p>Version {version}</p> */}
-                    <SettingFormComponent t={t} settings={settings} />
-                </div>
-            );
-        };
-        return SettingPanelComponent;
-    }
+          <SettingFormComponent t={t} settings={settings} />
+        </div>
+      );
+    };
+    return SettingPanelComponent;
+  }
 
-    panelTitle() {
-        return 'Setting';
-    }
+  panelTitle() {
+    return 'Setting';
+  }
 }

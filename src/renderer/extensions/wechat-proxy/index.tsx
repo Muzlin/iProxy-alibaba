@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // @ts-ignore
 import { Extension } from '../../extension';
-import { Checkbox, Card, Row, Col, Switch, Tooltip, Modal } from 'antd';
+import { Checkbox, Card, Row, Col, Switch, Tooltip, Modal, message } from 'antd';
 import './index.less';
 import { envRuleOption } from './const';
 import {
@@ -46,6 +46,12 @@ async function buildTrayContextMenu() {
       },
     },
     { type: 'separator' },
+    {
+      label: '检查更新',
+      click() {
+        message.warning('功能正在开发中');
+      },
+    },
     { type: 'separator' },
     {
       label: '显示窗口',

@@ -18,7 +18,7 @@ export function getAllExtensions() {
     new WhistlePanel(),
     // new Weinre(),
     new PhoneProxy(),
-    // new Setting(),
+    new Setting(),
     new WhistleExtension(),
   ] as unknown as Extension[];
 
