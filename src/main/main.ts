@@ -136,7 +136,7 @@ async function initSplashScreen() {
       'data:text/html;charset=UTF-8,' +
       encodeURIComponent(
         splash({
-          brand: 'Power By Whistle',
+          brand: 'Powered By Whistle & Electron',
           productName: `iProxy`,
           text: `Loading - ${version} ...`,
           logo: logoIcon,

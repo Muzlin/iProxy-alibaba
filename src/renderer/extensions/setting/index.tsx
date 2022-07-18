@@ -34,9 +34,6 @@ export class Setting extends Extension {
 
       return (
         <div className="iproxy-setting no-drag">
-          {/* <p>iProxy poweredby Whistle & Electron</p>
-                    <p>Made with love by IFE</p>
-                    <p>Version {version}</p> */}
           <SettingFormComponent t={t} settings={settings} />
         </div>
       );

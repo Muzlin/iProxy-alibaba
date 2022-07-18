@@ -438,7 +438,7 @@ export class WhistleExtension extends Extension {
       }, []);
       return (
         <>
-          <div>Power By Whistle</div>
+          <div>Powered By Whistle & Electron</div>
           <div className="switch-whistle-proxy-on-lan">
             <span>{t('Proxy on LAN')}:&nbsp;</span>
             <Switch
