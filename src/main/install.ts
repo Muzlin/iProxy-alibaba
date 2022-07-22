@@ -143,7 +143,7 @@ export async function installCertAndHelper() {
   // 信任证书 & 安装 helper1
   const installPromise = new Promise((resolve, reject) => {
     if (SYSTEM_IS_MACOS) {
-      const cmd = `echo "请输入本地登录密码" && sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
+      const cmd = `echo "请输入本地登录密码 \\033[1;41;32m请注意是电脑的登录密码，而不是Apple ID的密码\\033[0m" && sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${path.join(
         dir,
         CERT_FILE_NAME,
       )}" && sudo cp ${formatPath(PROXY_CONF_HELPER_FILE_PATH)} ${formatPath(
@@ -257,7 +257,10 @@ export async function installCertAndHelper() {
     let message;
     if (e === 'customer') {
       title = 'FBI WARNING';
-      message = 'BP 是个老六 😁';
+      message = `BP 是个老六 😁
+
+      应用程序即将退出
+      `;
     }
     alertAndQuit(title, message);
     // prevent copy cert after failed
