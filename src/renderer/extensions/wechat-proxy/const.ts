@@ -21,9 +21,9 @@ const defaultProjectList = [
     env: '',
   },
   {
-    name: 'qw-manage-client',
-    entry: 'qw-manage',
-    port: 8088,
+    name: 'qw-mobile-todo',
+    entry: 'mobile-todo',
+    port: 3002,
     isRun: false,
     env: '',
   },

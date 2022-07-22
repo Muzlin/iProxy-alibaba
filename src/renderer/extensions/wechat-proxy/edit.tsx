@@ -67,14 +67,15 @@ const EditDrawer = (props: any) => {
     form.setFieldsValue({ name, port, entry });
   }, []);
 
-  const checkData = (rule: any, value: any, callback: any) => {
+  const checkData = (rule: any, value: any) => {
     if (value) {
       if (!/^[0-9a-zA-Z\-]+$/.test(value)) {
-        callback(new Error('只能输入数字、字母、中划线，禁止输入空格'));
+        return Promise.reject('只能输入数字、字母、中划线，禁止输入空格');
       } else {
-        callback();
+        return Promise.resolve();
       }
     }
+    return Promise.resolve();
   };
 
   return (
