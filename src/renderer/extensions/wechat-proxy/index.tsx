@@ -63,6 +63,7 @@ async function buildTrayContextMenu() {
       label: '退出应用',
       click() {
         remote.app.quit();
+        remote.app.exit();
       },
     },
   ]);
